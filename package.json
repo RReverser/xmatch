@@ -1,0 +1,12 @@
+{
+  "name": "xmatch",
+  "version": "1.0.0",
+  "description": "Simple pattern matching for ES6 (no transpilation!)",
+  "main": "match.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": ["pattern", "matching", "match", "es6", "proxy"],
+  "author": "Ingvar Stepanyan <me@rreverser.com> (https://rreverser.com/)",
+  "license": "MIT"
+}
