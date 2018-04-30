@@ -11,7 +11,7 @@ match(obj, [
 	({ x }) => console.log('x', x),
 	({ y }) => console.log('y', y),
 	({ z }) => console.log('z', z),
-	// Exhaustive match; will throw UnmatchedPatternError unless uncommented:
+	// Exhaustive match; will throw `xmatch.UnmatchedPatternError` unless uncommented:
 	// other => console.error('Something else', other),
 ]);
 ```
@@ -36,6 +36,15 @@ match(obj, [
 		throw new Error(`Invalid command: ${command}`);
 	},
 ]);
+```
+
+## Shape assertions
+
+```javascript
+const { guard } = require('xmatch');
+
+const { x, y } = guard({ x: 1, y: 2 }); // OK
+const { x, y } = guard({ x: 1, z: 2 }); // throws `xmatch.UnmatchedPatternError`
 ```
 
 ## Known issues

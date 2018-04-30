@@ -12,8 +12,8 @@ function guard(condition) {
 	if (!condition) {
 		throw UNMATCHED;
 	}
-	// in case you want to destructure or something
-	return condition;
+	// in case you want to further destructure
+	return wrap(condition);
 }
 
 const TRAPS = {
