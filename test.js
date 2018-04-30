@@ -68,3 +68,11 @@ assert.throws(
 );
 
 assert.throws(() => test2({}), 'Invalid object');
+
+assert.doesNotThrow(() => {
+	let { x, y } = guard({ x: 10, y: 20 });
+});
+
+assert.throws(() => {
+	let { x, y } = guard({ x: 10, z: 20 });
+}, UnmatchedPatternError);
