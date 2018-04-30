@@ -64,10 +64,11 @@ assert.deepStrictEqual(test2({ command: 'abc:123' }), {
 
 assert.throws(
 	() => test2({ command: 'whatever' }),
+	Error,
 	'Invalid command: whatever'
 );
 
-assert.throws(() => test2({}), 'Invalid object');
+assert.throws(() => test2({}), Error, 'Invalid object');
 
 assert.doesNotThrow(() => {
 	let { x, y } = guard({ x: 10, y: 20 });
