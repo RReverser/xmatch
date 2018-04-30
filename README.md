@@ -30,7 +30,7 @@ match(obj, [
 	({ command }) => {
 		// Or, say, match result of regex:
 		let [, name, args] = guard(command.match(/^(\w+):(.*)$/));
-		console.log(s);
+		console.log({ name, args });
 	},
 	({ command }) => {
 		throw new Error(`Invalid command: ${command}`);
