@@ -2,7 +2,7 @@
 
 Simple pattern matching for ES6 (no transpilation!)
 
-## Simple usage
+## Property matching
 
 ```javascript
 const { match } = require('xmatch');
@@ -13,6 +13,19 @@ match(obj, [
 	({ z }) => console.log('z', z),
 	// Exhaustive match; will throw `xmatch.UnmatchedPatternError` unless uncommented:
 	// other => console.error('Something else', other),
+]);
+```
+
+### Iterable matching
+
+```javascript
+const { match } = require('xmatch');
+
+match(arr, [
+	([]) => 'empty',
+	([x]) => `x=${x}`,
+	([x, y]) => `x=${x},y=${y}`,
+	([x, y, ...{ length }]) => `x=${x},y=${y},rest.length=${length}`,
 ]);
 ```
 

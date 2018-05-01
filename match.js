@@ -17,9 +17,34 @@ function guard(condition) {
 }
 
 const TRAPS = {
-	get(...args) {
-		let result = Reflect.get(...args);
+	get(target, prop, receiver) {
+		let result = Reflect.get(target, prop, receiver);
 		guard(result !== undefined);
+		if (prop === Symbol.iterator) {
+			return function () {
+				let iter = result.apply(this, arguments);
+				let done = false;
+				return {
+					next() {
+						let value;
+						if (!done) {
+							({ value, done } = iter.next());
+						}
+						return { value, done };
+					},
+					return(value) {
+						if (!done) {
+							done = iter.next().done;
+							if (!done) {
+								// tried to bail early even though we have elements
+								throw UNMATCHED;
+							}
+						}
+						return { value, done };
+					}
+				};
+			};
+		}
 		return wrap(result);
 	},
 };

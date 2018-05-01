@@ -77,3 +77,18 @@ assert.doesNotThrow(() => {
 assert.throws(() => {
 	let { x, y } = guard({ x: 10, z: 20 });
 }, UnmatchedPatternError);
+
+function test3(obj) {
+	return match(obj, [
+		([]) => 'empty',
+		([x]) => `x=${x}`,
+		([x, y]) => `x=${x},y=${y}`,
+		([x, y, ...{ length }]) => `x=${x},y=${y},rest.length=${length}`,
+	]);
+}
+
+assert.strictEqual(test3([]), 'empty');
+assert.strictEqual(test3([10]), 'x=10');
+assert.strictEqual(test3([10,20]), 'x=10,y=20');
+assert.strictEqual(test3([10,20,30,40]), 'x=10,y=20,rest.length=2');
+assert.throws(() => test3({}), UnmatchedPatternError);
