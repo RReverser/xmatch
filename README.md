@@ -16,7 +16,7 @@ match(obj, [
 ]);
 ```
 
-### Iterable matching
+## Iterable matching
 
 ```javascript
 const { match } = require('xmatch');
