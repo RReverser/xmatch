@@ -1,6 +1,6 @@
 {
   "name": "xmatch",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Simple pattern matching for ES6 (no transpilation!)",
   "main": "match.js",
   "scripts": {

@@ -1,16 +1,18 @@
 'use strict';
 
+let currentUnmatchedDepth = 0;
+let unmatchedErrorDepth = new WeakMap();
+
 class UnmatchedPatternError extends Error {
 	constructor() {
 		super('Unmatched pattern');
+		unmatchedErrorDepth.set(this, currentUnmatchedDepth);
 	}
 }
 
-const UNMATCHED = new UnmatchedPatternError();
-
 function guard(condition) {
 	if (!condition) {
-		throw UNMATCHED;
+		throw new UnmatchedPatternError();
 	}
 	// in case you want to further destructure
 	return wrap(condition);
@@ -21,7 +23,7 @@ const TRAPS = {
 		let result = Reflect.get(target, prop, receiver);
 		guard(result !== undefined);
 		if (prop === Symbol.iterator) {
-			return function () {
+			return function() {
 				let iter = result.apply(this, arguments);
 				let done = false;
 				return {
@@ -37,11 +39,11 @@ const TRAPS = {
 							done = iter.next().done;
 							if (!done) {
 								// tried to bail early even though we have elements
-								throw UNMATCHED;
+								throw new UnmatchedPatternError();
 							}
 						}
 						return { value, done };
-					}
+					},
 				};
 			};
 		}
@@ -63,16 +65,22 @@ function wrap(obj) {
 }
 
 function match(obj, matchers) {
-	for (let matcher of matchers) {
-		try {
-			return matcher(wrap(obj));
-		} catch (e) {
-			if (e !== UNMATCHED) {
-				throw e;
+	try {
+		let depth = ++currentUnmatchedDepth;
+		for (let matcher of matchers) {
+			try {
+				return matcher(wrap(obj));
+			} catch (e) {
+				if (unmatchedErrorDepth.get(e) !== depth) {
+					// either another error or a deeper UnmatchedPatternError
+					throw e;
+				}
 			}
 		}
+		throw new UnmatchedPatternError();
+	} finally {
+		currentUnmatchedDepth--;
 	}
-	throw UNMATCHED;
 }
 
 module.exports = {

@@ -92,3 +92,12 @@ assert.strictEqual(test3([10]), 'x=10');
 assert.strictEqual(test3([10,20]), 'x=10,y=20');
 assert.strictEqual(test3([10,20,30,40]), 'x=10,y=20,rest.length=2');
 assert.throws(() => test3({}), UnmatchedPatternError);
+
+assert.throws(() => match({ x: 1 }, [
+	any => {
+		match({ y: 2 }, []);
+	},
+	otherAny => {
+		assert.fail('otherAny', 'any', 'Inner match failure should not cause invocation of the next branch', '!=');
+	}
+]), UnmatchedPatternError);
